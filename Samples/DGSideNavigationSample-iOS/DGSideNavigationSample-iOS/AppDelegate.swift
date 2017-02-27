@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let window = UIWindow(frame: UIScreen.main.bounds)
 
         let side = SideNavigationController(mainViewController: UINavigationController(rootViewController: ViewController()))
-        side.leftSide(viewController: LeftViewController(), options: .init())
-        side.rightSide(viewController: LeftViewController(), options: .init())
+        side.leftSide(viewController: LeftViewController())
+        side.rightSide(viewController: LeftViewController(), options: .init(widthPercent: 0.5, animationDuration: 2, hideStatusBar: true, overlayColor: .blue, overlayAlpha: 0.2))
         window.rootViewController = side
 
         self.window = window

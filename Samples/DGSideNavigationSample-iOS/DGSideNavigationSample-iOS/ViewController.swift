@@ -11,7 +11,18 @@ import DGSideNavigation
 
 class ViewController: UIViewController {
 
+    @IBAction func touchLeft(_ sender: UIButton) {
+        self.sideNavigationController?.showLeftSide()
+    }
+
+    @IBAction func touchClose(_ sender: UIButton) {
+        self.sideNavigationController?.closeSide()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+
+
+   
 }
