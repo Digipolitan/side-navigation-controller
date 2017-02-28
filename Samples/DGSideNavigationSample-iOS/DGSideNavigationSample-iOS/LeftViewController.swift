@@ -24,6 +24,13 @@ class LeftViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+
+    override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
+        return .slide
+    }
+
+
+
     /*
     // MARK: - Navigation
 

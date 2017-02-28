@@ -10,36 +10,14 @@ import UIKit
 
 open class SideNavigationController: UIViewController {
 
-    private enum Position {
+    private enum Direction {
         case left
         case right
     }
 
-    public struct Side {
-
-        public let viewController: UIViewController
-        public let options: Options
-
-        fileprivate init(viewController: UIViewController, options: Options) {
-            self.viewController = viewController
-            self.options = options
-        }
-    }
-
-    public struct Options {
-        public var widthPercent: CGFloat
-        public var animationDuration: TimeInterval
-        public var hideStatusBar: Bool
-        public var overlayColor: UIColor
-        public var overlayAlpha: CGFloat
-
-        public init(widthPercent: CGFloat = 0.33, animationDuration: TimeInterval = 0.3, hideStatusBar: Bool = false, overlayColor: UIColor = .black, overlayAlpha: CGFloat = 0.7) {
-            self.widthPercent = widthPercent
-            self.animationDuration = animationDuration
-            self.hideStatusBar = hideStatusBar
-            self.overlayColor = overlayColor
-            self.overlayAlpha = overlayAlpha
-        }
+    public enum Position {
+        case front
+        case back
     }
 
     private var visibleSideViewController: UIViewController? {
@@ -83,7 +61,6 @@ open class SideNavigationController: UIViewController {
     }()
     private lazy var mainContainer: UIView = {
         let mainContainer = UIView()
-        mainContainer.backgroundColor = .red
         mainContainer.autoresizingMask = UIViewAutoresizing(rawValue: 0b111111)
         return mainContainer
     }()
@@ -115,12 +92,12 @@ open class SideNavigationController: UIViewController {
             let mainFrame = self.mainContainer.frame
             let velocity = panGesture.velocity(in: self.view)
             if let left = self.left, mainFrame.origin.x > 0 {
-                if mainFrame.origin.x >= left.viewController.view.frame.width / 2 || velocity.x > 600 {
+                if (mainFrame.origin.x >= left.viewController.view.frame.width / 2 || velocity.x > 600) && self.visibleSideViewController == left.viewController {
                     self.show(side: left, to: .left, animated: true)
                     return
                 }
             } else if let right = self.right, mainFrame.origin.x < 0 {
-                if -mainFrame.origin.x > right.viewController.view.frame.width / 2 || velocity.x < -600 {
+                if (-mainFrame.origin.x > right.viewController.view.frame.width / 2 || velocity.x < -600) && self.visibleSideViewController == right.viewController {
                     self.show(side: right, to: .right, animated: true)
                     return
                 }
@@ -133,42 +110,42 @@ open class SideNavigationController: UIViewController {
 
     private var startOffset: CGFloat = 0
 
+    private func apply(side: Side, progress: CGFloat) {
+        self.overlay.alpha = side.options.overlayOpacity * progress
+        self.overlay.backgroundColor = side.options.overlayColor
+        self.mainContainer.layer.shadowColor = side.options.shadowCGColor
+        self.mainContainer.layer.shadowOpacity = Float(side.options.shadowOpacity)
+        if side.options.scale != 1 {
+            let scale = 1 - (1 - side.options.scale) * progress
+            self.mainContainer.transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)
+        }
+    }
+
     private func move(offset: CGFloat) {
         let bounds = self.view.bounds
-        var mainFrame = self.mainContainer.frame
         let minOffset = bounds.minX + offset
         if let left = self.left {
-            if minOffset > 0 {
+            if minOffset > 0 && (self.visibleSideViewController == nil || self.visibleSideViewController == left.viewController) {
                 self.visibleSideViewController = left.viewController
-                var leftFrame = left.viewController.view.frame
-                mainFrame.origin.x = min(minOffset, leftFrame.width)
-                let parallaxWidth = leftFrame.width / 3
-                let ratio = mainFrame.minX / leftFrame.width
-                leftFrame.origin.x = parallaxWidth * ratio - parallaxWidth
-                left.viewController.view.frame = leftFrame
-                self.mainContainer.frame = mainFrame
-                overlay.alpha = left.options.overlayAlpha * ratio
-                overlay.backgroundColor = left.options.overlayColor
+                let leftWidth = left.viewController.view.frame.width
+                let progress = min(minOffset, leftWidth) / leftWidth
+                self.apply(side: left, progress: progress)
+                self.move(side: left, with: .left, progress: progress)
                 return
             }
         }
         if let right = self.right {
             let maxOffset = bounds.maxX + offset
-            if maxOffset < bounds.width {
+            if maxOffset < bounds.width && (self.visibleSideViewController == nil || self.visibleSideViewController == right.viewController) {
                 self.visibleSideViewController = right.viewController
-                var rightFrame = right.viewController.view.frame
-                mainFrame.origin.x = max(minOffset, -rightFrame.width)
-                let parallaxWidth = rightFrame.width / 3
-                let ratio = fabs(mainFrame.minX / rightFrame.width)
-                rightFrame.origin.x = (bounds.width - rightFrame.width) + parallaxWidth * (1.0 - ratio)
-                right.viewController.view.frame = rightFrame
-                self.mainContainer.frame = mainFrame
-                overlay.alpha = right.options.overlayAlpha * ratio
-                overlay.backgroundColor = right.options.overlayColor
+                let rightWidth = right.viewController.view.frame.width
+                let progress = min(fabs(minOffset), rightWidth) / rightWidth
+                self.apply(side: right, progress: progress)
+                self.move(side: right, with: .right, progress: progress)
                 return
             }
         }
-        self.visibleSideViewController = nil
+        var mainFrame = self.mainContainer.frame
         mainFrame.origin.x = 0
         self.mainContainer.frame = mainFrame
     }
@@ -178,16 +155,26 @@ open class SideNavigationController: UIViewController {
         self.closeSide()
     }
 
-    private func enableMainGestures() {
-        self.overlay.isUserInteractionEnabled = true
-        self.mainPan.isEnabled = true
+    private func enableMainGestures(side: Side) {
+        self.overlay.isUserInteractionEnabled = !side.options.alwaysInteractionEnabled
+        self.mainPan.isEnabled = side.options.panningEnabled
         self.mainTap.isEnabled = true
     }
 
-    private func disableMainGesture() {
+    private func disableMainGestures() {
         self.overlay.isUserInteractionEnabled = false
         self.mainPan.isEnabled = false
         self.mainTap.isEnabled = false
+    }
+
+    private func enableSideGestures() {
+        self.leftScreenEdgePan.isEnabled = self.left?.options.panningEnabled ?? false
+        self.rightScreenEdgePan.isEnabled = self.right?.options.panningEnabled ?? false
+    }
+
+    private func disableSideGestures() {
+        self.leftScreenEdgePan.isEnabled = false
+        self.rightScreenEdgePan.isEnabled = false
     }
 
     public var visibleViewController: UIViewController? {
@@ -233,7 +220,8 @@ open class SideNavigationController: UIViewController {
         self.view.addGestureRecognizer(self.leftScreenEdgePan)
         self.view.addGestureRecognizer(self.rightScreenEdgePan)
 
-        self.disableMainGesture()
+        self.disableMainGestures()
+        self.enableSideGestures()
     }
 
     private func link(viewController: UIViewController, in view: UIView? = nil, at position: Int = -1) {
@@ -263,21 +251,33 @@ open class SideNavigationController: UIViewController {
     }
 
     public func leftSide(viewController: UIViewController, options: Options = Options()) {
-        self.unlink(viewController: self.left?.viewController)
+        if let left = self.left {
+            if left.viewController == self.visibleSideViewController {
+                self.close(side: left, to: .left, animated: false)
+            }
+            self.unlink(viewController: left.viewController)
+        }
         self.link(viewController: viewController, at: 0)
         let bounds = self.view.bounds
         let width = bounds.width * options.widthPercent
         viewController.view.frame = CGRect(x: -width / 3, y: 0, width: width, height: bounds.height)
         self.left = Side(viewController: viewController, options: options)
+        self.enableSideGestures()
     }
 
     public func rightSide(viewController: UIViewController, options: Options = Options()) {
-        self.unlink(viewController: self.right?.viewController)
+        if let right = self.right {
+            if right.viewController == self.visibleSideViewController {
+                self.close(side: right, to: .right, animated: false)
+            }
+            self.unlink(viewController: right.viewController)
+        }
         self.link(viewController: viewController, at: 0)
         let bounds = self.view.bounds
         let width = bounds.width * options.widthPercent
         viewController.view.frame = CGRect(x: bounds.width - width / 1.5, y: 0, width: width, height: bounds.height)
         self.right = Side(viewController: viewController, options: options)
+        self.enableSideGestures()
     }
 
     public func closeSide(animated: Bool = true) {
@@ -291,26 +291,15 @@ open class SideNavigationController: UIViewController {
         }
     }
 
-    private func close(side: Side, to position: Position, animated: Bool) {
+    private func close(side: Side, to direction: Direction, animated: Bool) {
         let width = self.view.bounds.width
         UIView.animate(withDuration: animated ? side.options.animationDuration : 0, animations: {
-            var frame = self.mainContainer.frame
-            frame.origin.x = 0
-            self.mainContainer.frame = frame
-            frame = side.viewController.view.frame
-            switch position {
-            case .left:
-                frame.origin.x = -frame.width / 3
-                break
-            case .right:
-                frame.origin.x = width - frame.width / 1.5
-                break
-            }
-            side.viewController.view.frame = frame
-            self.overlay.alpha = 0
+            self.apply(side: side, progress: 0)
+            self.move(side: side, with: direction, progress: 0)
         }) { _ in
             self.visibleSideViewController = nil
-            self.disableMainGesture()
+            self.disableMainGestures()
+            self.enableSideGestures()
         }
     }
 
@@ -328,34 +317,114 @@ open class SideNavigationController: UIViewController {
         self.show(side: right, to: .right, animated: animated)
     }
 
-    private func show(side: Side, to position: Position, animated: Bool) {
-        self.visibleSideViewController = side.viewController
+    private func move(side: Side, with direction: Direction, progress: CGFloat) {
+        var mainFrame = self.mainContainer.frame
+        var sideFrame = side.viewController.view.frame
+        let parallaxWidth = sideFrame.width / 3
+        let viewBounds = self.view.bounds
+        switch direction {
+        case .left :
+            mainFrame.origin.x = sideFrame.width * progress
+            sideFrame.origin.x = parallaxWidth * progress - parallaxWidth
+            break
+        case .right :
+            mainFrame.origin.x = -sideFrame.width * progress
+            sideFrame.origin.x = (viewBounds.width - sideFrame.width) + parallaxWidth * (1.0 - progress)
+            break
+        }
+        self.mainContainer.frame = mainFrame
+        side.viewController.view.frame = sideFrame
+    }
+
+    private func show(side: Side, to direction: Direction, animated: Bool) {
         self.view.endEditing(animated)
+        let width = self.view.bounds.width
+        self.visibleSideViewController = side.viewController
         UIView.animate(withDuration: animated ? side.options.animationDuration : 0, animations: {
+            self.apply(side: side, progress: 1)
+            self.move(side: side, with: direction, progress: 1)
+            /*
             var sideFrame = side.viewController.view.frame
             var mainFrame = self.mainContainer.frame
 
-            switch position {
+            switch direction {
             case .left:
                 sideFrame.origin.x = 0
                 mainFrame.origin.x = sideFrame.width
                 break
             case .right:
-                sideFrame.origin.x = mainFrame.width - sideFrame.width
+                sideFrame.origin.x = width - sideFrame.width
                 mainFrame.origin.x = -sideFrame.width
                 break
             }
 
             side.viewController.view.frame = sideFrame
             self.mainContainer.frame = mainFrame
-
-            self.overlay.alpha = side.options.overlayAlpha
-            self.overlay.backgroundColor = side.options.overlayColor
+ */
         }) { _ in
-            self.enableMainGestures()
+            self.enableMainGestures(side: side)
+            self.disableSideGestures()
         }
     }
 }
+
+public extension SideNavigationController {
+
+    public struct Side {
+
+        public let viewController: UIViewController
+        public let options: Options
+
+        fileprivate init(viewController: UIViewController, options: Options) {
+            self.viewController = viewController
+            self.options = options
+        }
+    }
+
+    public struct Options {
+        public var widthPercent: CGFloat
+        public var animationDuration: TimeInterval
+        public var overlayColor: UIColor
+        public var overlayOpacity: CGFloat
+        public var shadowOpacity: CGFloat
+        public var alwaysInteractionEnabled: Bool
+        public var panningEnabled: Bool
+        public var scale: CGFloat
+        public var position: Position
+        public var shadowColor: UIColor {
+            get {
+                return UIColor(cgColor: self.shadowCGColor)
+            }
+            set(newValue) {
+                self.shadowCGColor = newValue.cgColor
+            }
+        }
+        fileprivate var shadowCGColor: CGColor!
+
+        public init(widthPercent: CGFloat = 0.33,
+                    animationDuration: TimeInterval = 0.3,
+                    overlayColor: UIColor = .black,
+                    overlayOpacity: CGFloat = 0.5,
+                    shadowColor: UIColor = .black,
+                    shadowOpacity: CGFloat = 0.5,
+                    alwaysInteractionEnabled: Bool = false,
+                    panningEnabled: Bool = true,
+                    scale: CGFloat = 1,
+                    position: Position = .back) {
+            self.widthPercent = widthPercent
+            self.animationDuration = animationDuration
+            self.overlayColor = overlayColor
+            self.overlayOpacity = overlayOpacity
+            self.shadowOpacity = shadowOpacity
+            self.alwaysInteractionEnabled = alwaysInteractionEnabled
+            self.panningEnabled = panningEnabled
+            self.scale = scale
+            self.position = position
+            self.shadowColor = shadowColor
+        }
+    }
+}
+
 
 public extension UIViewController {
 
