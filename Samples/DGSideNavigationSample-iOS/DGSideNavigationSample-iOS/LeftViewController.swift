@@ -29,8 +29,6 @@ class LeftViewController: UIViewController {
         return .slide
     }
 
-
-
     /*
     // MARK: - Navigation
 
