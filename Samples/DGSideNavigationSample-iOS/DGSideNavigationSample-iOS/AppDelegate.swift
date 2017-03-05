@@ -19,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let window = UIWindow(frame: UIScreen.main.bounds)
 
         let side = SideNavigationController(mainViewController: UINavigationController(rootViewController: ViewController()))
-        side.leftSide(viewController: LeftViewController(), options: .init(alwaysInteractionEnabled: true, panningEnabled: false, position: .back))
+        side.leftSide(viewController: LeftViewController(), options: .init(overlayColor: .white, overlayOpacity: 0.7, shadowColor: .white, alwaysInteractionEnabled: false, panningEnabled: true, position: .back))
         side.rightSide(viewController: LeftViewController(), options: .init(widthPercent: 0.7, animationDuration: 0.3, overlayColor: .white, overlayOpacity: 0.2, scale: 0.8, position: .front))
         window.rootViewController = side
 
