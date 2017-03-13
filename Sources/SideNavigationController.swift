@@ -175,9 +175,11 @@ open class SideNavigationController: UIViewController {
             return
         }
         UIView.animate(withDuration: animated ? side.options.animationDuration : 0, animations: {
+            self.visibleSideViewController = nil
+            side.viewController.view.isHidden = false
             self.updateSide(with: direction, progress: 0)
         }) { _ in
-            self.visibleSideViewController = nil
+            side.viewController.view.isHidden = true
             self.mainGestures(enabled: false, direction: direction)
             self.sideGestures(enabled: true)
             self.revertSideDirection = false
@@ -211,8 +213,8 @@ open class SideNavigationController: UIViewController {
             // EXCEPTION
             return
         }
-        self.visibleSideViewController = side.viewController
         UIView.animate(withDuration: animated ? side.options.animationDuration : 0, animations: {
+            self.visibleSideViewController = side.viewController
             self.updateSide(with: direction, progress: 1)
         }) { _ in
             self.mainGestures(enabled: true, direction: direction)
@@ -236,20 +238,6 @@ open class SideNavigationController: UIViewController {
     }
 }
 
-public extension UIViewController {
-
-    public var sideNavigationController: SideNavigationController? {
-        var current = self
-        while let parent = current.parent {
-            if let side = parent as? SideNavigationController {
-                return side
-            }
-            current = parent
-        }
-        return nil
-    }
-}
-
 // NESTED TYPES
 
 public extension SideNavigationController {
@@ -257,68 +245,6 @@ public extension SideNavigationController {
     fileprivate enum Direction {
         case left
         case right
-    }
-
-    public enum Position {
-        case front
-        case back
-    }
-
-    public struct Side {
-
-        public let viewController: UIViewController
-        public let options: Options
-
-        fileprivate init(viewController: UIViewController, options: Options) {
-            self.viewController = viewController
-            self.options = options
-        }
-    }
-
-    public struct Options {
-
-        public static var defaultTintColor = UIColor.white
-
-        public var widthPercent: CGFloat
-        public var animationDuration: TimeInterval
-        public var overlayColor: UIColor
-        public var overlayOpacity: CGFloat
-        public var shadowOpacity: CGFloat
-        public var alwaysInteractionEnabled: Bool
-        public var panningEnabled: Bool
-        public var scale: CGFloat
-        public var position: Position
-        public var shadowColor: UIColor {
-            get {
-                return UIColor(cgColor: self.shadowCGColor)
-            }
-            set(newValue) {
-                self.shadowCGColor = newValue.cgColor
-            }
-        }
-        fileprivate var shadowCGColor: CGColor!
-
-        public init(widthPercent: CGFloat = 0.33,
-                    animationDuration: TimeInterval = 0.3,
-                    overlayColor: UIColor = Options.defaultTintColor,
-                    overlayOpacity: CGFloat = 0.5,
-                    shadowColor: UIColor = Options.defaultTintColor,
-                    shadowOpacity: CGFloat = 0.5,
-                    alwaysInteractionEnabled: Bool = false,
-                    panningEnabled: Bool = true,
-                    scale: CGFloat = 1,
-                    position: Position = .back) {
-            self.widthPercent = widthPercent
-            self.animationDuration = animationDuration
-            self.overlayColor = overlayColor
-            self.overlayOpacity = overlayOpacity
-            self.shadowOpacity = shadowOpacity
-            self.alwaysInteractionEnabled = alwaysInteractionEnabled
-            self.panningEnabled = panningEnabled
-            self.scale = scale
-            self.position = position
-            self.shadowColor = shadowColor
-        }
     }
 
     fileprivate class Gestures {
@@ -360,10 +286,11 @@ public extension SideNavigationController {
             }
             if panGesture.state == .changed {
                 let offset = panGesture.translation(in: sideNavigationController.view).x
-                sideNavigationController.update(gesture: panGesture, offset: offset)
+                sideNavigationController.update(offset: offset)
             } else if panGesture.state != .began {
                 let velocity = panGesture.velocity(in: sideNavigationController.view)
-                sideNavigationController.finish(gesture: panGesture, velocity: velocity.x)
+                let info = self.info(velocity: velocity.x)
+                sideNavigationController.finish(direction: info.direction, swipe: info.swipe)
             }
         }
 
@@ -372,7 +299,24 @@ public extension SideNavigationController {
             guard let sideNavigationController = self.sideNavigationController else {
                 return
             }
-            sideNavigationController.finish(gesture: tapGesture, velocity: Gestures.velocityTolerance)
+            if sideNavigationController.visibleSideViewController == sideNavigationController.left?.viewController {
+                sideNavigationController.finish(direction: .left, swipe: true)
+            } else {
+                sideNavigationController.finish(direction: .right, swipe: true)
+            }
+        }
+
+        private func info(velocity: CGFloat) -> (direction: Direction, swipe: Bool) {
+            if velocity >= 0 {
+                if velocity > Gestures.velocityTolerance {
+                    return (direction: .right, swipe: true)
+                }
+                return (direction: .right, swipe: false)
+            }
+            if -velocity > Gestures.velocityTolerance {
+                return (direction: .left, swipe: true)
+            }
+            return (direction: .left, swipe: false)
         }
     }
 }
@@ -441,17 +385,18 @@ fileprivate extension SideNavigationController {
 
 fileprivate extension SideNavigationController {
 
-    func update(gesture: UIGestureRecognizer, offset: CGFloat) {
+    func update(offset: CGFloat) {
         if let left = self.left {
             if self.visibleSideViewController == left.viewController || (offset > 0 && self.visibleSideViewController == nil) {
-                self.visibleSideViewController = left.viewController
+                UIView.animate(withDuration: left.options.animationDuration, animations: {
+                    self.visibleSideViewController = left.viewController
+                })
                 let leftWidth = left.viewController.view.frame.width
                 var progress = min(fabs(offset), leftWidth) / leftWidth
                 if self.revertSideDirection {
-                    guard offset <= 0 else {
-                        return
-                    }
-                    progress = 1 - progress
+                    progress = 1 - (offset <= 0 ? progress : 0)
+                } else if offset <= 0 {
+                    progress = 0
                 }
                 self.updateSide(with: .left, progress: progress)
                 return
@@ -459,14 +404,15 @@ fileprivate extension SideNavigationController {
         }
         if let right = self.right {
             if self.visibleSideViewController == right.viewController || (offset < 0 && self.visibleSideViewController == nil) {
-                self.visibleSideViewController = right.viewController
+                UIView.animate(withDuration: right.options.animationDuration, animations: {
+                    self.visibleSideViewController = right.viewController
+                })
                 let rightWidth = right.viewController.view.frame.width
                 var progress = min(fabs(offset), rightWidth) / rightWidth
                 if self.revertSideDirection {
-                    guard offset >= 0 else {
-                        return
-                    }
-                    progress = 1 - progress
+                    progress = 1 - (offset >= 0 ? progress : 0)
+                } else if offset >= 0 {
+                    progress = 0
                 }
                 self.updateSide(with: .right, progress: progress)
                 return
@@ -477,24 +423,20 @@ fileprivate extension SideNavigationController {
         self.mainContainer.frame = mainFrame
     }
 
-    func finish(gesture: UIGestureRecognizer, velocity: CGFloat) {
+    func finish(direction: Direction, swipe: Bool) {
         if self.visibleSideViewController != nil {
-            let swipe = fabs(velocity) >= Gestures.velocityTolerance
-            var displaySide = false
-            if self.revertSideDirection {
-                if !(self.sideProgress < 0.5 || swipe) {
-                    displaySide = true
+            if self.visibleSideViewController == self.left?.viewController {
+                if !(swipe && direction == .left) {
+                    if self.sideProgress > 0.5 || swipe {
+                        self.show(direction: .left, animated: true)
+                        return
+                    }
                 }
-            } else if self.sideProgress > 0.5 || swipe {
-                displaySide = true
-            }
-            if displaySide {
-                if self.visibleSideViewController == self.left?.viewController {
-                    self.show(direction: .left, animated: true)
-                } else {
+            } else if !(swipe && direction == .right) {
+                if self.sideProgress > 0.5 || swipe {
                     self.show(direction: .right, animated: true)
+                    return
                 }
-                return
             }
         }
         self.closeSide()

@@ -17,6 +17,10 @@
 		A38EF2CB1DECF97000637484 /* DGSideNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38EF2C71DECF97000637484 /* DGSideNavigationTests.swift */; };
 		A3A0AEBA1E6073AE00F2D9B6 /* SideNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A0AEB91E6073AE00F2D9B6 /* SideNavigationController.swift */; };
 		A3A0AEBB1E6073AE00F2D9B6 /* SideNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A0AEB91E6073AE00F2D9B6 /* SideNavigationController.swift */; };
+		A3ED88581E76AF80006438EF /* UIViewController+SideNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ED88571E76AF80006438EF /* UIViewController+SideNavigationController.swift */; };
+		A3ED88591E76AF80006438EF /* UIViewController+SideNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ED88571E76AF80006438EF /* UIViewController+SideNavigationController.swift */; };
+		A3ED885B1E76AF9E006438EF /* SideNavigationController+NestedTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ED885A1E76AF9E006438EF /* SideNavigationController+NestedTypes.swift */; };
+		A3ED885C1E76AF9E006438EF /* SideNavigationController+NestedTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ED885A1E76AF9E006438EF /* SideNavigationController+NestedTypes.swift */; };
 		AFC250B362379E292E2D3254 /* Pods_Frameworks_DGSideNavigation_tvOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6254FBA17163EABFDEEC29C5 /* Pods_Frameworks_DGSideNavigation_tvOS.framework */; };
 		D431FCC86A134B13C4FE43FA /* Pods_Tests_DGSideNavigationTests_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DA4939F0E316EAC3E524EB68 /* Pods_Tests_DGSideNavigationTests_iOS.framework */; };
 /* End PBXBuildFile section */
@@ -58,6 +62,8 @@
 		A3169E751DE083D900BABAFD /* DGSideNavigation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSideNavigation.h; sourceTree = "<group>"; };
 		A38EF2C71DECF97000637484 /* DGSideNavigationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DGSideNavigationTests.swift; sourceTree = "<group>"; };
 		A3A0AEB91E6073AE00F2D9B6 /* SideNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SideNavigationController.swift; sourceTree = "<group>"; };
+		A3ED88571E76AF80006438EF /* UIViewController+SideNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+SideNavigationController.swift"; sourceTree = "<group>"; };
+		A3ED885A1E76AF9E006438EF /* SideNavigationController+NestedTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SideNavigationController+NestedTypes.swift"; sourceTree = "<group>"; };
 		CDB7A3727755B3B81F83C59B /* Pods_Frameworks_DGSideNavigation_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Frameworks_DGSideNavigation_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA4939F0E316EAC3E524EB68 /* Pods_Tests_DGSideNavigationTests_iOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tests_DGSideNavigationTests_iOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E3A356BAFDAD87A508B964EB /* Pods-Tests-DGSideNavigationTests-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests-DGSideNavigationTests-tvOS.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Tests-DGSideNavigationTests-tvOS/Pods-Tests-DGSideNavigationTests-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
@@ -148,6 +154,8 @@
 			children = (
 				A3169E751DE083D900BABAFD /* DGSideNavigation.h */,
 				A3A0AEB91E6073AE00F2D9B6 /* SideNavigationController.swift */,
+				A3ED885A1E76AF9E006438EF /* SideNavigationController+NestedTypes.swift */,
+				A3ED88571E76AF80006438EF /* UIViewController+SideNavigationController.swift */,
 				A3169DCC1DE0629100BABAFD /* Info.plist */,
 			);
 			path = Sources;
@@ -559,6 +567,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3A0AEBA1E6073AE00F2D9B6 /* SideNavigationController.swift in Sources */,
+				A3ED885B1E76AF9E006438EF /* SideNavigationController+NestedTypes.swift in Sources */,
+				A3ED88581E76AF80006438EF /* UIViewController+SideNavigationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,6 +585,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3A0AEBB1E6073AE00F2D9B6 /* SideNavigationController.swift in Sources */,
+				A3ED885C1E76AF9E006438EF /* SideNavigationController+NestedTypes.swift in Sources */,
+				A3ED88591E76AF80006438EF /* UIViewController+SideNavigationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
