@@ -54,7 +54,7 @@ public extension SideNavigationController {
                     overlayColor: UIColor = Options.defaultTintColor,
                     overlayOpacity: CGFloat = 0.5,
                     shadowColor: UIColor = Options.defaultTintColor,
-                    shadowOpacity: CGFloat = 0.5,
+                    shadowOpacity: CGFloat = 0.8,
                     alwaysInteractionEnabled: Bool = false,
                     panningEnabled: Bool = true,
                     scale: CGFloat = 1,

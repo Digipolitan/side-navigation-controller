@@ -17,6 +17,10 @@
 		A30D64101E0D73B300A3CE45 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A30D640E1E0D73B300A3CE45 /* ViewController.xib */; };
 		A3A0AEBE1E622F0C00F2D9B6 /* LeftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A0AEBC1E622F0C00F2D9B6 /* LeftViewController.swift */; };
 		A3A0AEBF1E622F0C00F2D9B6 /* LeftViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3A0AEBD1E622F0C00F2D9B6 /* LeftViewController.xib */; };
+		A3F597301E76D96E001F230F /* RightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5972E1E76D96E001F230F /* RightViewController.swift */; };
+		A3F597311E76D96E001F230F /* RightViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3F5972F1E76D96E001F230F /* RightViewController.xib */; };
+		A3F597341E76E23E001F230F /* ChildViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F597321E76E23E001F230F /* ChildViewController.swift */; };
+		A3F597351E76E23E001F230F /* ChildViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3F597331E76E23E001F230F /* ChildViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -50,6 +54,10 @@
 		A30D640E1E0D73B300A3CE45 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
 		A3A0AEBC1E622F0C00F2D9B6 /* LeftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftViewController.swift; sourceTree = "<group>"; };
 		A3A0AEBD1E622F0C00F2D9B6 /* LeftViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeftViewController.xib; sourceTree = "<group>"; };
+		A3F5972E1E76D96E001F230F /* RightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightViewController.swift; sourceTree = "<group>"; };
+		A3F5972F1E76D96E001F230F /* RightViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RightViewController.xib; sourceTree = "<group>"; };
+		A3F597321E76E23E001F230F /* ChildViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChildViewController.swift; sourceTree = "<group>"; };
+		A3F597331E76E23E001F230F /* ChildViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChildViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +99,10 @@
 				A30D640E1E0D73B300A3CE45 /* ViewController.xib */,
 				A3A0AEBC1E622F0C00F2D9B6 /* LeftViewController.swift */,
 				A3A0AEBD1E622F0C00F2D9B6 /* LeftViewController.xib */,
+				A3F5972E1E76D96E001F230F /* RightViewController.swift */,
+				A3F5972F1E76D96E001F230F /* RightViewController.xib */,
+				A3F597321E76E23E001F230F /* ChildViewController.swift */,
+				A3F597331E76E23E001F230F /* ChildViewController.xib */,
 				A30D63F81E0D717E00A3CE45 /* Assets.xcassets */,
 				A30D63FA1E0D717E00A3CE45 /* LaunchScreen.storyboard */,
 				A30D63FD1E0D717E00A3CE45 /* Info.plist */,
@@ -184,6 +196,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A30D63FC1E0D717E00A3CE45 /* LaunchScreen.storyboard in Resources */,
+				A3F597351E76E23E001F230F /* ChildViewController.xib in Resources */,
+				A3F597311E76D96E001F230F /* RightViewController.xib in Resources */,
 				A3A0AEBF1E622F0C00F2D9B6 /* LeftViewController.xib in Resources */,
 				A30D64101E0D73B300A3CE45 /* ViewController.xib in Resources */,
 				A30D63F91E0D717E00A3CE45 /* Assets.xcassets in Resources */,
@@ -246,6 +260,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3A0AEBE1E622F0C00F2D9B6 /* LeftViewController.swift in Sources */,
+				A3F597341E76E23E001F230F /* ChildViewController.swift in Sources */,
+				A3F597301E76D96E001F230F /* RightViewController.swift in Sources */,
 				A30D640F1E0D73B300A3CE45 /* ViewController.swift in Sources */,
 				A30D63F21E0D717E00A3CE45 /* AppDelegate.swift in Sources */,
 			);

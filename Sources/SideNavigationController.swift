@@ -32,7 +32,7 @@ open class SideNavigationController: UIViewController {
     public private(set) var left: Side?
     public private(set) var right: Side?
 
-    public var mainViewController: UIViewController? {
+    public var mainViewController: UIViewController! {
         willSet(newValue) {
             self.unlink(viewController: self.mainViewController)
         }
@@ -46,9 +46,9 @@ open class SideNavigationController: UIViewController {
         }
     }
 
-    public var visibleViewController: UIViewController? {
+    public var visibleViewController: UIViewController {
         if self.visibleSideViewController != nil {
-            return self.visibleSideViewController
+            return self.visibleSideViewController!
         }
         return self.mainViewController
     }
@@ -80,6 +80,9 @@ open class SideNavigationController: UIViewController {
                 #if os(iOS)
                 self.setNeedsStatusBarAppearanceUpdate()
                 #endif
+                if #available(iOS 9.0, *) {
+                    self.setNeedsFocusUpdate()
+                }
             }
         }
     }
@@ -120,15 +123,17 @@ open class SideNavigationController: UIViewController {
         }
         self.view.addSubview(self.mainContainer)
 
-        self.overlay.addGestureRecognizer(self.gestures.mainPan)
-        self.overlay.addGestureRecognizer(self.gestures.mainTap)
-        self.mainGestures(enabled: false)
-
         #if os(iOS)
+        self.mainContainer.addGestureRecognizer(self.gestures.mainPan)
         self.view.addGestureRecognizer(self.gestures.leftScreenEdgePan)
         self.view.addGestureRecognizer(self.gestures.rightScreenEdgePan)
         self.sideGestures(enabled: true)
         #endif
+        #if os(tvOS)
+        self.view.addGestureRecognizer(self.gestures.mainPan)
+        #endif
+        self.mainContainer.addGestureRecognizer(self.gestures.mainTap)
+        self.mainGestures(enabled: false)
     }
 
     private func link(viewController: UIViewController, in view: UIView? = nil, at position: Int = -1) {
@@ -207,23 +212,13 @@ open class SideNavigationController: UIViewController {
         self.show(direction: .right, animated: animated)
     }
 
-    fileprivate func updateSide(with direction: Direction, progress: CGFloat) {
-        guard let side = self.side(direction: direction) else {
-            // EXCEPTION
-            return
-        }
-        self.sideProgress = progress
-        if side.options.position == .back {
-            self.updateBack(side: side, direction: direction, progress: progress)
-        } else {
-            self.updateFront(side: side, direction: direction, progress: progress)
-        }
-    }
-
     fileprivate func show(direction: Direction, animated: Bool) {
         self.view.endEditing(animated)
         guard let side = self.side(direction: direction)  else {
             // EXCEPTION
+            return
+        }
+        guard side.viewController == self.visibleSideViewController || self.visibleSideViewController == nil else {
             return
         }
         UIView.animate(withDuration: animated ? side.options.animationDuration : 0, animations: {
@@ -235,6 +230,19 @@ open class SideNavigationController: UIViewController {
             #if os(iOS)
             self.sideGestures(enabled: false)
             #endif
+        }
+    }
+
+    fileprivate func updateSide(with direction: Direction, progress: CGFloat) {
+        guard let side = self.side(direction: direction) else {
+            // EXCEPTION
+            return
+        }
+        self.sideProgress = progress
+        if side.options.position == .back {
+            self.updateBack(side: side, direction: direction, progress: progress)
+        } else {
+            self.updateFront(side: side, direction: direction, progress: progress)
         }
     }
 
@@ -357,7 +365,7 @@ fileprivate extension SideNavigationController {
         self.overlay.backgroundColor = side.options.overlayColor
         self.mainContainer.layer.shadowColor = side.options.shadowCGColor
         self.mainContainer.layer.shadowOpacity = Float(side.options.shadowOpacity)
-        self.mainContainer.layer.shadowRadius = 15
+        self.mainContainer.layer.shadowRadius = 10
         if side.options.scale != 1 {
             let scale = 1 - (1 - side.options.scale) * progress
             self.mainContainer.transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)
@@ -385,15 +393,19 @@ fileprivate extension SideNavigationController {
     fileprivate func updateFront(side: Side, direction: Direction, progress: CGFloat) {
         self.overlay.alpha = side.options.overlayOpacity * progress
         self.overlay.backgroundColor = side.options.overlayColor
-        self.mainContainer.layer.shadowColor = side.options.shadowCGColor
-        self.mainContainer.layer.shadowOpacity = Float(side.options.shadowOpacity)
-        self.mainContainer.layer.shadowRadius = 15
+        self.mainContainer.layer.shadowColor = nil
+        self.mainContainer.layer.shadowOpacity = 0
+        self.mainContainer.layer.shadowRadius = 3
+        let sideView: UIView! = side.viewController.view
+        sideView.layer.shadowColor = side.options.shadowCGColor
+        sideView.layer.shadowOpacity = Float(side.options.shadowOpacity)
+        sideView.layer.shadowRadius = 10
         if side.options.scale != 1 {
             let scale = 1 - (1 - side.options.scale) * progress
             self.mainContainer.transform = CGAffineTransform.identity.scaledBy(x: scale, y: scale)
         }
         let viewBounds = self.view.bounds
-        var sideFrame = side.viewController.view.frame
+        var sideFrame = sideView.frame
         sideFrame.size.width = viewBounds.width * side.options.widthPercent
         sideFrame.size.height = viewBounds.height
         switch direction {
@@ -404,7 +416,7 @@ fileprivate extension SideNavigationController {
             sideFrame.origin.x = (viewBounds.width - sideFrame.width) + sideFrame.width * (1.0 - progress)
             break
         }
-        side.viewController.view.frame = sideFrame
+        sideView.frame = sideFrame
     }
 }
 

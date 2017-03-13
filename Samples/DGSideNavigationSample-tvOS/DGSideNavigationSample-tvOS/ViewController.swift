@@ -14,4 +14,12 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     }
+
+    @IBAction func displayLeft(_ sender: UIButton) {
+        self.sideNavigationController?.showLeftSide()
+    }
+
+    @IBAction func displayRight(_ sender: UIButton) {
+        self.sideNavigationController?.showRightSide()
+    }
 }

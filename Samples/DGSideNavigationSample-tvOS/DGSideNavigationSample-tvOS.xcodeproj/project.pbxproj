@@ -14,6 +14,10 @@
 		A30D64A01E0D7BA200A3CE45 /* DGSideNavigation.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A30D649E1E0D7BA200A3CE45 /* DGSideNavigation.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A30D64A51E0D7BC200A3CE45 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30D64A31E0D7BC200A3CE45 /* ViewController.swift */; };
 		A30D64A61E0D7BC200A3CE45 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A30D64A41E0D7BC200A3CE45 /* ViewController.xib */; };
+		A3F5973C1E770747001F230F /* LeftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5973A1E770747001F230F /* LeftViewController.swift */; };
+		A3F5973D1E770747001F230F /* LeftViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3F5973B1E770747001F230F /* LeftViewController.xib */; };
+		A3F597401E774C68001F230F /* RightViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3F5973E1E774C68001F230F /* RightViewController.swift */; };
+		A3F597411E774C68001F230F /* RightViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A3F5973F1E774C68001F230F /* RightViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -44,6 +48,10 @@
 		A30D649E1E0D7BA200A3CE45 /* DGSideNavigation.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = DGSideNavigation.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A30D64A31E0D7BC200A3CE45 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		A30D64A41E0D7BC200A3CE45 /* ViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ViewController.xib; sourceTree = "<group>"; };
+		A3F5973A1E770747001F230F /* LeftViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftViewController.swift; sourceTree = "<group>"; };
+		A3F5973B1E770747001F230F /* LeftViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LeftViewController.xib; sourceTree = "<group>"; };
+		A3F5973E1E774C68001F230F /* RightViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightViewController.swift; sourceTree = "<group>"; };
+		A3F5973F1E774C68001F230F /* RightViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RightViewController.xib; sourceTree = "<group>"; };
 		B59EBA76E4EE0948B3D0809A /* Pods-DGSideNavigationSample-DGSideNavigationSample-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DGSideNavigationSample-DGSideNavigationSample-tvOS.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-DGSideNavigationSample-DGSideNavigationSample-tvOS/Pods-DGSideNavigationSample-DGSideNavigationSample-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		ED2ADEE910CDAC99133FE3EF /* Pods-Samples-DGSideNavigationSample-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Samples-DGSideNavigationSample-tvOS.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-Samples-DGSideNavigationSample-tvOS/Pods-Samples-DGSideNavigationSample-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		FFD332EBB09E825D4FA391D8 /* Pods-Samples-DGSideNavigationSample-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Samples-DGSideNavigationSample-tvOS.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-Samples-DGSideNavigationSample-tvOS/Pods-Samples-DGSideNavigationSample-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -99,6 +107,10 @@
 				A30D648F1E0D7B2A00A3CE45 /* AppDelegate.swift */,
 				A30D64A31E0D7BC200A3CE45 /* ViewController.swift */,
 				A30D64A41E0D7BC200A3CE45 /* ViewController.xib */,
+				A3F5973A1E770747001F230F /* LeftViewController.swift */,
+				A3F5973B1E770747001F230F /* LeftViewController.xib */,
+				A3F5973E1E774C68001F230F /* RightViewController.swift */,
+				A3F5973F1E774C68001F230F /* RightViewController.xib */,
 				A30D64961E0D7B2A00A3CE45 /* Assets.xcassets */,
 				A30D64981E0D7B2A00A3CE45 /* Info.plist */,
 			);
@@ -181,6 +193,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				A30D64A61E0D7BC200A3CE45 /* ViewController.xib in Resources */,
+				A3F597411E774C68001F230F /* RightViewController.xib in Resources */,
+				A3F5973D1E770747001F230F /* LeftViewController.xib in Resources */,
 				A30D64971E0D7B2A00A3CE45 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -240,6 +254,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3F5973C1E770747001F230F /* LeftViewController.swift in Sources */,
+				A3F597401E774C68001F230F /* RightViewController.swift in Sources */,
 				A30D64A51E0D7BC200A3CE45 /* ViewController.swift in Sources */,
 				A30D64901E0D7B2A00A3CE45 /* AppDelegate.swift in Sources */,
 			);
