@@ -77,9 +77,35 @@ open class SideNavigationController: UIViewController {
         didSet {
             if self.visibleSideViewController != oldValue {
                 self.visibleSideViewController?.view.isHidden = false
+                #if os(iOS)
                 self.setNeedsStatusBarAppearanceUpdate()
+                #endif
             }
         }
+    }
+
+    fileprivate func side(direction: Direction) -> Side? {
+        return direction == .left ? self.left : self.right
+    }
+
+    fileprivate func setSide(_ side: Side, direction: Direction) {
+        if let old = self.side(direction: direction) {
+            if old.viewController == self.visibleSideViewController {
+                self.close(direction: direction, animated: false)
+            }
+            self.unlink(viewController: old.viewController)
+        }
+        side.viewController.view.isHidden = true
+        self.link(viewController: side.viewController, at: side.options.position == .back ? 0 : -1)
+        if direction == .left {
+            self.left = side
+        } else {
+            self.right = side
+        }
+        self.updateSide(with: direction, progress: 0)
+        #if os(iOS)
+        self.sideGestures(enabled: true)
+        #endif
     }
 
     open override func viewDidLoad() {
@@ -96,12 +122,13 @@ open class SideNavigationController: UIViewController {
 
         self.overlay.addGestureRecognizer(self.gestures.mainPan)
         self.overlay.addGestureRecognizer(self.gestures.mainTap)
+        self.mainGestures(enabled: false)
 
+        #if os(iOS)
         self.view.addGestureRecognizer(self.gestures.leftScreenEdgePan)
         self.view.addGestureRecognizer(self.gestures.rightScreenEdgePan)
-
-        self.mainGestures(enabled: false)
         self.sideGestures(enabled: true)
+        #endif
     }
 
     private func link(viewController: UIViewController, in view: UIView? = nil, at position: Int = -1) {
@@ -122,6 +149,8 @@ open class SideNavigationController: UIViewController {
         }
     }
 
+    #if os(iOS)
+
     open override var childViewControllerForStatusBarStyle: UIViewController? {
         return self.visibleViewController
     }
@@ -130,32 +159,14 @@ open class SideNavigationController: UIViewController {
         return self.visibleViewController
     }
 
+    #endif
+
     public func leftSide(viewController: UIViewController, options: Options = Options()) {
-        if let left = self.left {
-            if left.viewController == self.visibleSideViewController {
-                self.close(direction: .left, animated: false)
-            }
-            self.unlink(viewController: left.viewController)
-        }
-        viewController.view.isHidden = true
-        self.link(viewController: viewController, at: options.position == .back ? 0 : -1)
-        self.left = Side(viewController: viewController, options: options)
-        self.updateSide(with: .left, progress: 0)
-        self.sideGestures(enabled: true)
+        self.setSide(Side(viewController: viewController, options: options), direction: .left)
     }
 
     public func rightSide(viewController: UIViewController, options: Options = Options()) {
-        if let right = self.right {
-            if right.viewController == self.visibleSideViewController {
-                self.close(direction: .right, animated: false)
-            }
-            self.unlink(viewController: right.viewController)
-        }
-        viewController.view.isHidden = true
-        self.link(viewController: viewController, at: options.position == .back ? 0 : -1)
-        self.right = Side(viewController: viewController, options: options)
-        self.updateSide(with: .right, progress: 0)
-        self.sideGestures(enabled: true)
+        self.setSide(Side(viewController: viewController, options: options), direction: .right)
     }
 
     public func closeSide(animated: Bool = true) {
@@ -170,7 +181,7 @@ open class SideNavigationController: UIViewController {
     }
 
     private func close(direction: Direction, animated: Bool) {
-        guard let side = direction == .left ? self.left : self.right else {
+        guard let side = self.side(direction: direction) else {
             // EXCEPTION
             return
         }
@@ -180,9 +191,11 @@ open class SideNavigationController: UIViewController {
             self.updateSide(with: direction, progress: 0)
         }) { _ in
             side.viewController.view.isHidden = true
-            self.mainGestures(enabled: false, direction: direction)
-            self.sideGestures(enabled: true)
             self.revertSideDirection = false
+            self.mainGestures(enabled: false, direction: direction)
+            #if os(iOS)
+            self.sideGestures(enabled: true)
+            #endif
         }
     }
 
@@ -195,7 +208,7 @@ open class SideNavigationController: UIViewController {
     }
 
     fileprivate func updateSide(with direction: Direction, progress: CGFloat) {
-        guard let side = direction == .left ? self.left : self.right else {
+        guard let side = self.side(direction: direction) else {
             // EXCEPTION
             return
         }
@@ -209,7 +222,7 @@ open class SideNavigationController: UIViewController {
 
     fileprivate func show(direction: Direction, animated: Bool) {
         self.view.endEditing(animated)
-        guard let side = direction == .left ? self.left : self.right else {
+        guard let side = self.side(direction: direction)  else {
             // EXCEPTION
             return
         }
@@ -217,25 +230,34 @@ open class SideNavigationController: UIViewController {
             self.visibleSideViewController = side.viewController
             self.updateSide(with: direction, progress: 1)
         }) { _ in
-            self.mainGestures(enabled: true, direction: direction)
-            self.sideGestures(enabled: false)
             self.revertSideDirection = true
+            self.mainGestures(enabled: true, direction: direction)
+            #if os(iOS)
+            self.sideGestures(enabled: false)
+            #endif
         }
     }
 
     fileprivate func mainGestures(enabled: Bool, direction: Direction? = nil) {
-        guard let side = direction == .left ? self.left : self.right else {
-            return
+        var overlayInteractionEnabled = enabled
+        var panningEnabled = enabled
+        if enabled && direction != nil {
+            if let side = self.side(direction: direction!) {
+                overlayInteractionEnabled = !side.options.alwaysInteractionEnabled
+                panningEnabled = side.options.panningEnabled
+            }
         }
-        self.overlay.isUserInteractionEnabled = enabled ? !side.options.alwaysInteractionEnabled : enabled
-        self.gestures.mainPan.isEnabled = enabled ? side.options.panningEnabled : enabled
+        self.overlay.isUserInteractionEnabled = overlayInteractionEnabled
+        self.gestures.mainPan.isEnabled = panningEnabled
         self.gestures.mainTap.isEnabled = enabled
     }
 
+    #if os(iOS)
     fileprivate func sideGestures(enabled: Bool) {
         self.gestures.leftScreenEdgePan.isEnabled = enabled ? self.left?.options.panningEnabled ?? false : enabled
         self.gestures.rightScreenEdgePan.isEnabled = enabled ? self.right?.options.panningEnabled ?? false : enabled
     }
+    #endif
 }
 
 // NESTED TYPES
@@ -252,13 +274,17 @@ public extension SideNavigationController {
         public static let velocityTolerance: CGFloat = 600
 
         private weak var sideNavigationController: SideNavigationController?
+        #if os(iOS)
         public var leftScreenEdgePan: UIScreenEdgePanGestureRecognizer!
         public var rightScreenEdgePan: UIScreenEdgePanGestureRecognizer!
+        #endif
         public var mainPan: UIPanGestureRecognizer!
         public var mainTap: UITapGestureRecognizer!
 
         init(sideNavigationController: SideNavigationController) {
             self.sideNavigationController = sideNavigationController
+
+            #if os(iOS)
             let leftScreenEdgePan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(handle(panGesture:)))
             leftScreenEdgePan.edges = .left
             leftScreenEdgePan.maximumNumberOfTouches = 1
@@ -269,14 +295,15 @@ public extension SideNavigationController {
             rightScreenEdgePan.maximumNumberOfTouches = 1
             self.rightScreenEdgePan = rightScreenEdgePan
 
+            self.leftScreenEdgePan.require(toFail: self.rightScreenEdgePan)
+            self.rightScreenEdgePan.require(toFail: self.leftScreenEdgePan)
+            #endif
+
             self.mainPan = UIPanGestureRecognizer(target: self, action: #selector(handle(panGesture:)))
 
             self.mainTap = UITapGestureRecognizer(target: self, action: #selector(handle(tapGesture:)))
 
             self.mainTap.require(toFail: self.mainPan)
-
-            self.leftScreenEdgePan.require(toFail: self.rightScreenEdgePan)
-            self.rightScreenEdgePan.require(toFail: self.leftScreenEdgePan)
         }
 
         @objc
