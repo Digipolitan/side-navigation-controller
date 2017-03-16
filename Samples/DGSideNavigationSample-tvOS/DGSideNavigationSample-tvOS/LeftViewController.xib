@@ -36,21 +36,21 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cBK-ft-kpp">
-                    <rect key="frame" x="872" y="186" width="177" height="86"/>
+                    <rect key="frame" x="808" y="196" width="304" height="86"/>
                     <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                    <state key="normal" title="Close"/>
+                    <state key="normal" title="Print console"/>
                     <connections>
-                        <action selector="closeSide:" destination="-1" eventType="primaryActionTriggered" id="ckE-EC-1pK"/>
+                        <action selector="consoleLog:" destination="-1" eventType="primaryActionTriggered" id="AGq-X9-dNE"/>
                     </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="ecX-Ba-MQR" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="Egk-3o-X3j"/>
+                <constraint firstItem="cBK-ft-kpp" firstAttribute="top" secondItem="EbG-6S-o9R" secondAttribute="bottom" constant="20" id="MIq-wA-Cup"/>
                 <constraint firstItem="ecX-Ba-MQR" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="gdh-na-TUb"/>
                 <constraint firstAttribute="trailing" secondItem="ecX-Ba-MQR" secondAttribute="trailing" constant="10" id="h0z-Q1-2cE"/>
                 <constraint firstItem="cBK-ft-kpp" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="nlH-Vn-WVt"/>
-                <constraint firstItem="cBK-ft-kpp" firstAttribute="top" secondItem="EbG-6S-o9R" secondAttribute="bottom" constant="10" id="p2o-Wr-XqU"/>
                 <constraint firstItem="EbG-6S-o9R" firstAttribute="top" secondItem="ecX-Ba-MQR" secondAttribute="bottom" constant="20" id="sjl-2Q-Lp3"/>
                 <constraint firstItem="EbG-6S-o9R" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ste-HP-osB"/>
                 <constraint firstItem="ecX-Ba-MQR" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="w2p-8B-UJe"/>

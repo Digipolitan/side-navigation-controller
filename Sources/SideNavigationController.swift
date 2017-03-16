@@ -125,14 +125,15 @@ open class SideNavigationController: UIViewController {
 
         #if os(iOS)
         self.mainContainer.addGestureRecognizer(self.gestures.mainPan)
+        self.mainContainer.addGestureRecognizer(self.gestures.mainTap)
         self.view.addGestureRecognizer(self.gestures.leftScreenEdgePan)
         self.view.addGestureRecognizer(self.gestures.rightScreenEdgePan)
         self.sideGestures(enabled: true)
         #endif
         #if os(tvOS)
         self.view.addGestureRecognizer(self.gestures.mainPan)
+        self.view.addGestureRecognizer(self.gestures.mainTap)
         #endif
-        self.mainContainer.addGestureRecognizer(self.gestures.mainTap)
         self.mainGestures(enabled: false)
     }
 
@@ -165,6 +166,10 @@ open class SideNavigationController: UIViewController {
     }
 
     #endif
+
+    open override var preferredFocusEnvironments: [UIFocusEnvironment] {
+        return self.visibleViewController.preferredFocusEnvironments
+    }
 
     public func leftSide(viewController: UIViewController, options: Options = Options()) {
         self.setSide(Side(viewController: viewController, options: options), direction: .left)
@@ -256,6 +261,7 @@ open class SideNavigationController: UIViewController {
             }
         }
         self.overlay.isUserInteractionEnabled = overlayInteractionEnabled
+        self.mainContainer.isUserInteractionEnabled = !overlayInteractionEnabled
         self.gestures.mainPan.isEnabled = panningEnabled
         self.gestures.mainTap.isEnabled = enabled
     }

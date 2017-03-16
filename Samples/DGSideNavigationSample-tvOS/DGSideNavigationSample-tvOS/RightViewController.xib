@@ -18,17 +18,19 @@
             <rect key="frame" x="0.0" y="0.0" width="1920" height="1080"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Right View Controller" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eLR-MY-vFw">
-                    <rect key="frame" x="731" y="510" width="459" height="60"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="50"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit" textAlignment="right" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IKX-iP-9rZ">
+                    <rect key="frame" x="4" y="4" width="1912" height="1072"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="40"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
             <color key="backgroundColor" red="0.81445747068262886" green="1" blue="0.98775054514792604" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="eLR-MY-vFw" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="aNC-wP-04I"/>
-                <constraint firstItem="eLR-MY-vFw" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="j1t-P7-3rg"/>
+                <constraint firstItem="IKX-iP-9rZ" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="2od-0s-THI"/>
+                <constraint firstItem="IKX-iP-9rZ" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="f0V-iW-Kd8"/>
+                <constraint firstAttribute="trailing" secondItem="IKX-iP-9rZ" secondAttribute="trailing" constant="10" id="lZv-Kb-gbw"/>
+                <constraint firstAttribute="bottom" secondItem="IKX-iP-9rZ" secondAttribute="bottom" constant="10" id="xlc-1f-FHz"/>
             </constraints>
         </view>
     </objects>

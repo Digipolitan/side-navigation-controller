@@ -15,4 +15,8 @@ class LeftViewController: UIViewController {
         self.sideNavigationController?.closeSide()
     }
 
+    @IBAction func consoleLog(_ sender: UIButton) {
+        print("UI Event");
+    }
+
 }
