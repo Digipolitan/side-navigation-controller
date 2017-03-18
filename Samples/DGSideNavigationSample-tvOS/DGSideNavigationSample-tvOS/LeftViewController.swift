@@ -16,7 +16,7 @@ class LeftViewController: UIViewController {
     }
 
     @IBAction func consoleLog(_ sender: UIButton) {
-        print("UI Event");
+        print("UI Event")
     }
 
 }
