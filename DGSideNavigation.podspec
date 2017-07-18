@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
 s.name = "DGSideNavigation"
-s.version = "1.0.0"
+s.version = "1.0.1"
 s.summary = "Side menu navigation written in swift"
 s.homepage = "https://github.com/Digipolitan/side-navigation-swift"
 s.authors = "Digipolitan"
