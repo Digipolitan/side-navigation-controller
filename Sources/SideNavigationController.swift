@@ -138,12 +138,12 @@ open class SideNavigationController: UIViewController {
     private func link(viewController: UIViewController, in view: UIView? = nil, at position: Int = -1) {
         viewController.view.autoresizingMask = UIViewAutoresizing(rawValue: 0b111111)
         let container: UIView = view != nil ? view! : self.view
+        self.addChildViewController(viewController)
         if position < 0 {
             container.addSubview(viewController.view)
         } else {
             container.insertSubview(viewController.view, at: position)
         }
-        self.addChildViewController(viewController)
     }
 
     private func unlink(viewController: UIViewController?) {
