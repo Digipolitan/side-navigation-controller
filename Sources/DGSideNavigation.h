@@ -1,5 +1,5 @@
-#ifndef _DGFRAMEWORKTEMPLATE_H
-#define _DGFRAMEWORKTEMPLATE_H
+#ifndef _DGSIDENAVIGATION_H
+#define _DGSIDENAVIGATION_H
 
 #import <Foundation/Foundation.h>
 
@@ -9,4 +9,4 @@ FOUNDATION_EXPORT double DGSideNavigationVersionNumber;
 //! Project version string for DGSideNavigation
 FOUNDATION_EXPORT const unsigned char DGSideNavigationVersionString[];
 
-#endif /* _DGFRAMEWORKTEMPLATE_H */
+#endif /* _DGSIDENAVIGATION_H */
