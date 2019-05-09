@@ -1,9 +1,9 @@
 //
 //  SideNavigationController.swift
-//  DGSideNavigation
+//  SideNavigationController
 //
 //  Created by Benoit BRIATTE on 24/02/2017.
-//  Copyright © 2017 Digipolitan. All rights reserved.
+//  Copyright © 2019 Digipolitan. All rights reserved.
 //
 
 import UIKit
@@ -16,13 +16,13 @@ open class SideNavigationController: UIViewController {
     fileprivate lazy var overlay: UIView = {
         let overlay = UIView()
         overlay.isUserInteractionEnabled = false
-        overlay.autoresizingMask = UIViewAutoresizing(rawValue: 0b111111)
+        overlay.autoresizingMask = UIView.AutoresizingMask(rawValue: 0b111111)
         overlay.alpha = 0
         return overlay
     }()
     fileprivate lazy var mainContainer: UIView = {
         let mainContainer = UIView()
-        mainContainer.autoresizingMask = UIViewAutoresizing(rawValue: 0b111111)
+        mainContainer.autoresizingMask = UIView.AutoresizingMask(rawValue: 0b111111)
         return mainContainer
     }()
 
@@ -63,9 +63,11 @@ open class SideNavigationController: UIViewController {
 
     public convenience init(mainViewController: UIViewController) {
         self.init()
+        // swiftlint:disable inert_defer
         defer {
             self.mainViewController = mainViewController
         }
+        // swiftlint:enable inert_defer
     }
 
     fileprivate var visibleSideViewController: UIViewController? {
@@ -136,9 +138,9 @@ open class SideNavigationController: UIViewController {
     }
 
     private func link(viewController: UIViewController, in view: UIView? = nil, at position: Int = -1) {
-        viewController.view.autoresizingMask = UIViewAutoresizing(rawValue: 0b111111)
+        viewController.view.autoresizingMask = UIView.AutoresizingMask(rawValue: 0b111111)
         let container: UIView = view != nil ? view! : self.view
-        self.addChildViewController(viewController)
+        self.addChild(viewController)
         if position < 0 {
             container.addSubview(viewController.view)
         } else {
@@ -149,16 +151,16 @@ open class SideNavigationController: UIViewController {
     private func unlink(viewController: UIViewController?) {
         if let viewController = viewController {
             viewController.view.removeFromSuperview()
-            viewController.removeFromParentViewController()
+            viewController.removeFromParent()
         }
     }
 
     #if os(iOS)
-    open override var childViewControllerForStatusBarStyle: UIViewController? {
+    open override var childForStatusBarStyle: UIViewController? {
         return self.visibleViewController
     }
 
-    open override var childViewControllerForStatusBarHidden: UIViewController? {
+    open override var childForStatusBarHidden: UIViewController? {
         return self.visibleViewController
     }
     #elseif os(tvOS)
@@ -199,14 +201,14 @@ open class SideNavigationController: UIViewController {
             self.visibleSideViewController = nil
             side.viewController.view.isHidden = false
             self.updateSide(with: direction, progress: 0)
-        }) { _ in
+        }, completion: { _ in
             side.viewController.view.isHidden = true
             self.revertSideDirection = false
             self.mainGestures(enabled: false, direction: direction)
             #if os(iOS)
             self.sideGestures(enabled: true)
             #endif
-        }
+        })
     }
 
     public func showLeftSide(animated: Bool = true) {
@@ -229,13 +231,13 @@ open class SideNavigationController: UIViewController {
         UIView.animate(withDuration: animated ? side.options.animationDuration : 0, animations: {
             self.visibleSideViewController = side.viewController
             self.updateSide(with: direction, progress: 1)
-        }) { _ in
+        }, completion: { _ in
             self.revertSideDirection = true
             self.mainGestures(enabled: true, direction: direction)
             #if os(iOS)
             self.sideGestures(enabled: false)
             #endif
-        }
+        })
     }
 
     fileprivate func updateSide(with direction: Direction, progress: CGFloat) {
@@ -316,7 +318,7 @@ public extension SideNavigationController {
 
             self.mainTap = UITapGestureRecognizer(target: self, action: #selector(handle(tapGesture:)))
             #if os(tvOS)
-            self.mainTap.allowedPressTypes = [NSNumber(value: UIPressType.menu.rawValue)]
+            self.mainTap.allowedPressTypes = [NSNumber(value: UIPress.PressType.menu.rawValue)]
             #endif
             self.mainTap.require(toFail: self.mainPan)
         }
@@ -367,7 +369,7 @@ public extension SideNavigationController {
 
 fileprivate extension SideNavigationController {
 
-    fileprivate func apply(options: Options, front: UIView!, back: UIView!, progress: CGFloat) {
+    func apply(options: Options, front: UIView!, back: UIView!, progress: CGFloat) {
         self.overlay.alpha = options.overlayOpacity * progress
         self.overlay.backgroundColor = options.overlayColor
         front.layer.shadowColor = options.shadowCGColor
@@ -382,7 +384,7 @@ fileprivate extension SideNavigationController {
         }
     }
 
-    fileprivate func updateBack(side: Side, direction: Direction, progress: CGFloat) {
+    func updateBack(side: Side, direction: Direction, progress: CGFloat) {
         let sideView: UIView! = side.viewController.view
         self.apply(options: side.options, front: self.mainContainer, back: sideView, progress: progress)
         var mainFrame = self.mainContainer.frame
@@ -395,17 +397,15 @@ fileprivate extension SideNavigationController {
         case .left :
             mainFrame.origin.x = sideFrame.width * progress
             sideFrame.origin.x = parallaxWidth * progress - parallaxWidth
-            break
         case .right :
             mainFrame.origin.x = -sideFrame.width * progress
             sideFrame.origin.x = (viewBounds.width - sideFrame.width) + parallaxWidth * (1.0 - progress)
-            break
         }
         self.mainContainer.frame = mainFrame
         sideView.frame = sideFrame
     }
 
-    fileprivate func updateFront(side: Side, direction: Direction, progress: CGFloat) {
+    func updateFront(side: Side, direction: Direction, progress: CGFloat) {
         let sideView: UIView! = side.viewController.view
         self.apply(options: side.options, front: sideView, back: self.mainContainer, progress: progress)
         let viewBounds = self.view.bounds
@@ -415,10 +415,8 @@ fileprivate extension SideNavigationController {
         switch direction {
         case .left :
             sideFrame.origin.x = -sideFrame.width + sideFrame.width * progress
-            break
         case .right :
             sideFrame.origin.x = (viewBounds.width - sideFrame.width) + sideFrame.width * (1.0 - progress)
-            break
         }
         sideView.frame = sideFrame
     }
@@ -435,7 +433,7 @@ fileprivate extension SideNavigationController {
                     self.visibleSideViewController = left.viewController
                 })
                 let leftWidth = left.viewController.view.frame.width
-                var progress = min(fabs(offset), leftWidth) / leftWidth
+                var progress = min(abs(offset), leftWidth) / leftWidth
                 if self.revertSideDirection {
                     progress = 1 - (offset <= 0 ? progress : 0)
                 } else if offset <= 0 {
@@ -451,7 +449,7 @@ fileprivate extension SideNavigationController {
                     self.visibleSideViewController = right.viewController
                 })
                 let rightWidth = right.viewController.view.frame.width
-                var progress = min(fabs(offset), rightWidth) / rightWidth
+                var progress = min(abs(offset), rightWidth) / rightWidth
                 if self.revertSideDirection {
                     progress = 1 - (offset >= 0 ? progress : 0)
                 } else if offset >= 0 {

@@ -1,6 +1,6 @@
 //
 //  SideNavigationController+NestedTypes.swift
-//  DGSideNavigation
+//  SideNavigationController
 //
 //  Created by Benoit BRIATTE on 13/03/2017.
 //  Copyright © 2017 Digipolitan. All rights reserved.
@@ -10,12 +10,12 @@ import UIKit
 
 public extension SideNavigationController {
 
-    public enum Position {
+    enum Position {
         case front
         case back
     }
 
-    public struct Side {
+    struct Side {
 
         public let viewController: UIViewController
         public let options: Options
@@ -26,7 +26,7 @@ public extension SideNavigationController {
         }
     }
 
-    public struct Options {
+    struct Options {
 
         public static var defaultTintColor = UIColor.white
 

@@ -1,4 +1,4 @@
-# Contributing to side-navigation-swift
+# Contributing to side-navigation-controller
 
 First off, thanks for taking the time to contribute! :tada::+1:
 
