@@ -23,7 +23,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-Works with iOS 8+, tested on Xcode 8.2
+Works with iOS 9+, tested on Xcode 8.2
 
 ### Installing
 
@@ -33,7 +33,7 @@ To install the `SideNavigationController` using **cocoapods**
 
 ```
 # Uncomment this line to define a global platform for your project
-platform :ios, '8.0'
+platform :ios, '9.0'
 
 target 'YourTarget' do
   frameworks
