@@ -1,21 +1,21 @@
-DGSideNavigation
+SideNavigationController
 =================================
 
-[![Build Status](https://travis-ci.org/Digipolitan/side-navigation-swift.svg?branch=master)](https://travis-ci.org/Digipolitan/side-navigation-swift)
-[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/DGSideNavigation.svg)](https://img.shields.io/cocoapods/v/DGSideNavigation.svg)
+[![Build Status](https://travis-ci.org/Digipolitan/side-navigation-controller.svg?branch=master)](https://travis-ci.org/Digipolitan/side-navigation-controller)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/SideNavigationController.svg)](https://img.shields.io/cocoapods/v/SideNavigationController.svg)
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![Platform](https://img.shields.io/cocoapods/p/DGSideNavigation.svg?style=flat)](http://cocoadocs.org/docsets/DGSideNavigation)
+[![Platform](https://img.shields.io/cocoapods/p/SideNavigationController.svg?style=flat)](http://cocoadocs.org/docsets/SideNavigationController)
 [![Twitter](https://img.shields.io/badge/twitter-@Digipolitan-blue.svg?style=flat)](http://twitter.com/Digipolitan)
 
-Side menu controller written in swift.
+Side navigation controller written in swift.
 
 ### Demo iOS
 
-![Demo iOS](https://github.com/Digipolitan/side-navigation-swift/blob/develop/Screenshots/ios_capture.gif?raw=true "Demo iOS")
+![Demo iOS](https://github.com/Digipolitan/side-navigation-controller/blob/develop/Screenshots/ios_capture.gif?raw=true "Demo iOS")
 
 ### Demo tvOS
 
-![Demo tvOS](https://github.com/Digipolitan/side-navigation-swift/blob/develop/Screenshots/tvos_capture.gif?raw=true "Demo tvOS")
+![Demo tvOS](https://github.com/Digipolitan/side-navigation-controller/blob/develop/Screenshots/tvos_capture.gif?raw=true "Demo tvOS")
 
 ## Getting Started
 
@@ -27,7 +27,7 @@ Works with iOS 8+, tested on Xcode 8.2
 
 ### Installing
 
-To install the `DGSideNavigation` using **cocoapods**
+To install the `SideNavigationController` using **cocoapods**
 
 - Add an entry in your Podfile  
 
@@ -40,7 +40,7 @@ target 'YourTarget' do
    use_frameworks!
 
   # Pods for YourTarget
-  pod 'DGSideNavigation'
+  pod 'SideNavigationController'
 end
 ```
 
@@ -99,4 +99,4 @@ unacceptable behavior to [contact@digipolitan.com](mailto:contact@digipolitan.co
 
 ## License
 
-DGSideNavigation is licensed under the [BSD 3-Clause license](LICENSE).
+SideNavigationController is licensed under the [BSD 3-Clause license](LICENSE).
