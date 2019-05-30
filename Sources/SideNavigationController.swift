@@ -81,8 +81,15 @@ open class SideNavigationController: UIViewController {
                 self.visibleSideViewController?.view.isHidden = false
                 #if os(iOS)
                 self.setNeedsStatusBarAppearanceUpdate()
+                if #available(iOS 11.0, *) {
+                    self.setNeedsUpdateOfHomeIndicatorAutoHidden()
+                    self.setNeedsUpdateOfScreenEdgesDeferringSystemGestures()
+                }
                 #elseif os(tvOS)
                 self.setNeedsFocusUpdate()
+                if #available(tvOS 11.0, *) {
+                    self.setNeedsUserInterfaceAppearanceUpdate()
+                }
                 #endif
             }
         }
@@ -163,7 +170,22 @@ open class SideNavigationController: UIViewController {
     open override var childForStatusBarHidden: UIViewController? {
         return self.visibleViewController
     }
+
+    @available(iOS 11.0, *)
+    open override var childForHomeIndicatorAutoHidden: UIViewController? {
+        return self.visibleViewController
+    }
+
+    @available(iOS 11.0, *)
+    open override var childForScreenEdgesDeferringSystemGestures: UIViewController? {
+        return self.visibleViewController
+    }
     #elseif os(tvOS)
+    @available(tvOS 11.0, *)
+    open override var childViewControllerForUserInterfaceStyle: UIViewController? {
+        return self.visibleViewController
+    }
+
     open override var preferredFocusEnvironments: [UIFocusEnvironment] {
         return self.visibleViewController.preferredFocusEnvironments
     }

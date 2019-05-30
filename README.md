@@ -1,6 +1,7 @@
 SideNavigationController
 =================================
 
+[![Swift Version](https://img.shields.io/badge/swift-5.0-orange.svg?style=flat)](https://developer.apple.com/swift/)
 [![Build Status](https://travis-ci.org/Digipolitan/side-navigation-controller.svg?branch=master)](https://travis-ci.org/Digipolitan/side-navigation-controller)
 [![CocoaPods Compatible](https://img.shields.io/cocoapods/v/SideNavigationController.svg)](https://img.shields.io/cocoapods/v/SideNavigationController.svg)
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
